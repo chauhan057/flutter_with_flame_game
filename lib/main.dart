@@ -1,4 +1,5 @@
 import 'package:flame/components.dart';
+import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flame/flame.dart';
@@ -9,54 +10,59 @@ void main() {
   );
 }
 
-class MyGame extends FlameGame {
-  late MyComponent myComponent;
-  late MyTestParent myParent1, myParent2;
+class MyGame extends FlameGame with TapCallbacks {
+
+  late Player myPlayer;
 
   @override
   Color backgroundColor() => const Color(0xff222222);
 
   @override
   void onMount() {
-    add(myParent1= MyTestParent());
-    add(myParent2= MyTestParent());
-    myComponent = MyComponent();  // Initialize myComponent
-    // add(myComponent);             // Add it to the game
-    myTestFunction();
-    super.onMount();
+add(myPlayer=Player());
+super.onMount();
   }
 
-  void myTestFunction() async {
-    myParent1.add(myComponent);
-    await Future.delayed(Duration(seconds: 1));
-    myParent1.remove(myComponent);
-    await Future.delayed(Duration(seconds: 1));
-    myParent2.add(myComponent);
-    await Future.delayed(Duration(seconds: 1));
-    myParent2.remove(myComponent);
-  }
-}
-
-class MyTestParent extends Component {
-
-}
-
-class MyComponent extends Component {
   @override
-  void onLoad() {
-    print("MyComponent.onLoad()");
-    super.onLoad();
+  void onTapDown(TapDownEvent event) {
+myPlayer.jump();
+super.onTapDown(event);
   }
+
+}
+
+class Player  extends PositionComponent{
+  final _velocity = Vector2(0, 30.0);
+  final _gravity = 980.0;
+  final _jumpSpeed = 350.0;
 
   @override
   void onMount() {
-    print("MyComponent.onMount()");
+    position=Vector2(150, 100);
     super.onMount();
   }
 
   @override
-  void onRemove() {
-    print("MyComponent.onRemove()");
-    super.onRemove();
+  void update(double dt) {
+    // TODO: implement update
+    super.update(dt);
+    position+= _velocity *dt;
+    _velocity.y += _gravity *dt;
   }
+
+  @override
+  void render(Canvas canvas) {
+    // TODO: implement render
+    super.render(canvas);
+    canvas.drawCircle(
+        position.toOffset(),
+        15,
+        Paint()..color =Colors.yellow,
+    );
+  }
+
+  void jump(){
+    _velocity.y = -_jumpSpeed;
+  }
+
 }
