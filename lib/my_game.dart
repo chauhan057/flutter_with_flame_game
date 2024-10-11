@@ -3,6 +3,7 @@ import 'package:color_switch_game/player.dart';
 import 'package:flame/camera.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
+import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flame/rendering.dart';
 import 'package:flame_audio/flame_audio.dart';
@@ -39,10 +40,18 @@ class MyGame extends FlameGame
   Color backgroundColor() => const Color(0xff222222);
 
   @override
-  void onLoad() {
+  Future<void> onLoad() async {
+    await super.onLoad();
     decorator = PaintDecorator.blur(0);
     FlameAudio.bgm.initialize();
-    super.onLoad();
+    await Flame.images.loadAll([
+      'finger_tap.png',
+      'star_icon.png',
+    ]);
+    await FlameAudio.audioCache.loadAll([
+      'background.mp3',
+      'collect.wav',
+    ]);
   }
 
   @override
@@ -98,6 +107,30 @@ class MyGame extends FlameGame
     ));
     world.add(StarComponent(
       position: Vector2(0, -400),
+    ));
+
+    world.add(ColorSwitcher(position: Vector2(0, -580)));
+
+    world.add(CircleRotator(
+      position: Vector2(0, -750),
+      size: Vector2(180, 180),
+    ));
+    world.add(StarComponent(
+      position: Vector2(0, -750),
+    ));
+
+    world.add(ColorSwitcher(position: Vector2(0, -950)));
+
+    world.add(CircleRotator(
+      position: Vector2(0, -1150),
+      size: Vector2(180, 180),
+    ));
+    world.add(CircleRotator(
+      position: Vector2(0, -1150),
+      size: Vector2(210, 210),
+    ));
+    world.add(StarComponent(
+      position: Vector2(0, -1150),
     ));
   }
 

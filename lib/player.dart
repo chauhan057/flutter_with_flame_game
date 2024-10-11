@@ -15,7 +15,7 @@ class Player extends PositionComponent
   Player({
     required super.position,
     this.playerRadius = 12,
-  }): super(
+  }) : super(
     priority: 20,
   );
 
@@ -26,6 +26,7 @@ class Player extends PositionComponent
   final double playerRadius;
 
   Color _color = Colors.white;
+  final _playerPaint = Paint();
 
   @override
   void onLoad() {
@@ -65,7 +66,7 @@ class Player extends PositionComponent
     canvas.drawCircle(
       (size / 2).toOffset(),
       playerRadius,
-      Paint()..color = _color,
+      _playerPaint..color = _color,
     );
   }
 
