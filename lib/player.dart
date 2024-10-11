@@ -1,6 +1,7 @@
 import 'package:color_switch_game/color_switcher.dart';
 import 'package:color_switch_game/ground.dart';
 import 'package:color_switch_game/my_game.dart';
+import 'package:color_switch_game/star_component.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/extensions.dart';
@@ -13,7 +14,9 @@ class Player extends PositionComponent
   Player({
     required super.position,
     this.playerRadius = 12,
-  });
+  }): super(
+    priority: 20,
+  );
 
   final _velocity = Vector2.zero();
   final _gravity = 980.0;
@@ -71,7 +74,6 @@ class Player extends PositionComponent
 
   @override
   void onCollision(Set<Vector2> points, PositionComponent other) {
-
     super.onCollision(points, other);
     if (other is ColorSwitcher) {
       // Handle the color change logic
@@ -81,6 +83,9 @@ class Player extends PositionComponent
       if (_color != other.color) {
         gameRef.gameOver();
       }
+    } else if (other is StarComponent) {
+      other.showCollectEffect();
+      gameRef.increaseScore();
     }
   }
 
